@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body{font-family:system-ui;width:240px;padding:12px;background:#f4f6f9;}
+.badge{padding:4px 8px;border-radius:6px;font-size:12px;}
+.on{background:#2ecc71;color:#fff;}
+.off{background:#e74c3c;color:#fff;}
+button{width:100%;padding:8px;margin-top:8px;border:none;border-radius:6px;cursor:pointer;}
+.primary{background:#3498db;color:#fff;}
+</style>
+</head>
+<body>
+
+<div>Status: <span id="badge"></span></div>
+<div id="profile" style="margin-top:6px;font-size:12px;"></div>
+
+<button id="toggle"></button>
+<button id="config" class="primary">Konfiguracja</button>
+
+<script src="popup.js"></script>
+</body>
+</html>

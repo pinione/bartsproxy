@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+body{font-family:system-ui;background:#f4f6f9;padding:20px;}
+.card{background:#fff;padding:16px;border-radius:10px;margin-bottom:16px;}
+input,select{padding:6px;margin-right:6px;}
+button{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;}
+.add{background:#3498db;color:white;}
+.use{background:#2ecc71;color:white;}
+.del{background:#e74c3c;color:white;}
+ul{list-style:none;padding-left:0;}
+li{margin-top:6px;}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h3>Tryb</h3>
+<label><input type="radio" name="mode" value="whitelist"> Whitelist</label><br>
+<label><input type="radio" name="mode" value="global"> Global</label><br>
+<label><input type="radio" name="mode" value="global_whitelist"> Global + whitelist</label>
+</div>
+
+<div class="card">
+<h3>Globalne proxy</h3>
+<input id="gname" placeholder="Nazwa">
+<select id="gtype">
+<option value="SOCKS5">SOCKS5</option>
+<option value="SOCKS">SOCKS</option>
+<option value="PROXY">HTTP</option>
+<option value="HTTPS">HTTPS</option>
+</select>
+<input id="ghost" placeholder="Host">
+<input id="gport" placeholder="Port">
+<button id="gadd" class="add">Dodaj</button>
+<ul id="glist"></ul>
+</div>
+
+<div class="card">
+<h3>Whitelist</h3>
+<input id="pattern" placeholder="*.example.com">
+<select id="wtype">
+<option value="DIRECT">DIRECT</option>
+<option value="SOCKS5">SOCKS5</option>
+<option value="SOCKS">SOCKS</option>
+<option value="PROXY">HTTP</option>
+<option value="HTTPS">HTTPS</option>
+</select>
+<input id="whost" placeholder="Host">
+<input id="wport" placeholder="Port">
+<button id="add" class="add">Dodaj</button>
+<ul id="list"></ul>
+</div>
+
+<script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Privacy Proxy Switcher (Multi-Type + Direct)",
+  "version": "17.0",
+  "permissions": ["proxy", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/off.svg"
+  },
+  "options_page": "options.html"
+}
