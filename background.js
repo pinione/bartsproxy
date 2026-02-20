@@ -1,3 +1,22 @@
+const ICONS = {
+  ON: {
+    16: "on_proxy.png",
+    32: "on_proxy.png",
+    48: "on_proxy.png",
+    128: "on_proxy.png"
+  },
+  OFF: {
+    16: "off_proxy.png",
+    32: "off_proxy.png",
+    48: "off_proxy.png",
+    128: "off_proxy.png"
+  }
+};
+
+function setStatusIcon(status) {
+  return chrome.action.setIcon({ path: status === "ON" ? ICONS.ON : ICONS.OFF });
+}
+
 async function buildPAC() {
   const {
     mode = "whitelist",
@@ -6,7 +25,7 @@ async function buildPAC() {
     globalProfiles = [],
     rules = []
   } = await chrome.storage.local.get([
-    "mode","killSwitch","activeGlobal","globalProfiles","rules"
+    "mode", "killSwitch", "activeGlobal", "globalProfiles", "rules"
   ]);
 
   const activeProfile =
@@ -62,39 +81,54 @@ function FindProxyForURL(url, host) {
 `;
 }
 
-async function applyPAC(){
-  const pac=await buildPAC();
+async function applyPAC() {
+  const pac = await buildPAC();
   await chrome.proxy.settings.set({
-    value:{mode:"pac_script",pacScript:{data:pac}},
-    scope:"regular"
+    value: { mode: "pac_script", pacScript: { data: pac } },
+    scope: "regular"
   });
 }
 
-async function enable(){
+async function enable() {
   await applyPAC();
-  await chrome.storage.local.set({status:"ON"});
-  chrome.action.setIcon({path:"icons/on.svg"});
+  await chrome.storage.local.set({ status: "ON" });
+  await setStatusIcon("ON");
 }
 
-async function disable(){
-  await chrome.proxy.settings.clear({scope:"regular"});
-  await chrome.storage.local.set({status:"OFF"});
-  chrome.action.setIcon({path:"icons/off.svg"});
+async function disable() {
+  await chrome.proxy.settings.clear({ scope: "regular" });
+  await chrome.storage.local.set({ status: "OFF" });
+  await setStatusIcon("OFF");
 }
 
-chrome.storage.onChanged.addListener((c,a)=>{
-  if(a!=="local")return;
-  if(c.mode||c.killSwitch||c.rules||c.activeGlobal||c.globalProfiles){
-    chrome.storage.local.get("status").then(({status})=>{
-      if(status==="ON")applyPAC();
+async function syncIconWithStatus() {
+  const { status = "OFF" } = await chrome.storage.local.get("status");
+  await setStatusIcon(status);
+}
+
+chrome.storage.onChanged.addListener((c, a) => {
+  if (a !== "local") return;
+  if (c.mode || c.killSwitch || c.rules || c.activeGlobal || c.globalProfiles) {
+    chrome.storage.local.get("status").then(({ status }) => {
+      if (status === "ON") applyPAC();
     });
   }
 });
 
-chrome.runtime.onMessage.addListener((msg,s,sendResponse)=>{
-  (async()=>{
-    if(msg==="ON"){await enable();sendResponse({status:"ON"});}
-    if(msg==="OFF"){await disable();sendResponse({status:"OFF"});}
+chrome.runtime.onStartup.addListener(syncIconWithStatus);
+chrome.runtime.onInstalled.addListener(syncIconWithStatus);
+syncIconWithStatus();
+
+chrome.runtime.onMessage.addListener((msg, s, sendResponse) => {
+  (async () => {
+    if (msg === "ON") {
+      await enable();
+      sendResponse({ status: "ON" });
+    }
+    if (msg === "OFF") {
+      await disable();
+      sendResponse({ status: "OFF" });
+    }
   })();
   return true;
 });
