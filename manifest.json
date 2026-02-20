@@ -7,7 +7,12 @@
   "background": { "service_worker": "background.js" },
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "icons/off.svg"
+    "default_icon": {
+      "16": "off_proxy.png",
+      "32": "off_proxy.png",
+      "48": "off_proxy.png",
+      "128": "off_proxy.png"
+    }
   },
   "options_page": "options.html"
 }
